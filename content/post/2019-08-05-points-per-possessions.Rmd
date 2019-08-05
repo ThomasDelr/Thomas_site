@@ -9,7 +9,7 @@ tags:
   - R Markdown
   - R
   - NBA
-description: ''
+description: 'Few visualization test on points per possessions'
 topics: []
 ---
 
