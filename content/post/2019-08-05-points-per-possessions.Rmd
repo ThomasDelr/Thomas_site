@@ -1,0 +1,87 @@
+---
+title: Points per possessions
+author: Thomas Delrue
+date: '2019-08-05'
+slug: points-per-possessions
+categories:
+  - R
+tags:
+  - R Markdown
+  - R
+  - NBA
+description: ''
+topics: []
+---
+
+```{r setup, include=FALSE, echo =F, error=F, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+load("C:/Users/Thomas/Desktop/Projet/R/NBA_shiny/wk/synergy_data.RData")
+library(tidyverse)
+library(highcharter)
+
+```
+
+#### Offensive cut points per possessions, Center players
+```{r cut_off_C, echo =F, error=F, message=FALSE, warning=F}
+cut_off <- dataSynergyPlayer %>% filter(typeSet == 'Offensive' & categorySynergy == 'Cut' 
+                                        & slugSeason == '2018-19', typeSeason == 'Reg')
+
+cut_off <- cut_off %>% group_by(groupPosition) %>% mutate(tiers = case_when(poss < quantile(poss, 0.33) ~ 'not enough possessions',
+                                                                            TRUE ~ 'enough possessions'),
+                                                          value = case_when(ppp <mean(ppp) ~ ppp/-1,
+                                                                            TRUE ~ ppp))
+
+hchart(cut_off %>% filter(groupPosition == 'C') %>% arrange(-value), type = 'column',
+       hcaes(x = namePlayer, y = round(value, 3), group = tiers)) %>% 
+ hc_xAxis(labels = list(rotation=-45)) %>% 
+ hc_colors(c("DarkGreen", "LightGray")) %>% 
+ hc_title(text = "Center points per possession in Cut position") %>% 
+ hc_add_theme(hc_theme_elementary()) %>% 
+ hc_yAxis(title = list(text ='points per possesion')) %>%
+ hc_credits(enabled =T, text = "source : nba.com") %>% 
+ hc_subtitle(text = 'negative value for the players under the ppp average')
+```
+
+
+#### Offensive cut points per possessions, Forward players
+```{r cut_off_F, echo =F, error=F, message=FALSE}
+cut_off <- dataSynergyPlayer %>% filter(typeSet == 'Offensive' & categorySynergy == 'Cut' 
+                                        & slugSeason == '2018-19', typeSeason == 'Reg')
+
+cut_off <- cut_off %>% group_by(groupPosition) %>% mutate(tiers = case_when(poss < quantile(poss, 0.33) ~ 'not enough possessions',
+                                                                            TRUE ~ 'enough possessions'),
+                                                          value = case_when(ppp <mean(ppp) ~ ppp/-1,
+                                                                            TRUE ~ ppp))
+
+hchart(cut_off %>% filter(groupPosition == 'F') %>% arrange(-value), type = 'column',
+       hcaes(x = namePlayer, y = round(value, 3), group = tiers)) %>% 
+ hc_xAxis(labels = list(rotation=-45)) %>% 
+ hc_colors(c("DarkGreen", "LightGray")) %>% 
+ hc_title(text = "Forward points per possession in Cut position") %>% 
+ hc_add_theme(hc_theme_elementary()) %>% 
+ hc_yAxis(title = list(text ='points per possesion')) %>%
+ hc_credits(enabled =T, text = "source : nba.com") %>% 
+ hc_subtitle(text = 'negative value for the players under the ppp average')
+```
+
+
+#### Offensive cut points per possessions, Guard players
+```{r cut_off_G, echo =F, error=F, message=FALSE}
+cut_off <- dataSynergyPlayer %>% filter(typeSet == 'Offensive' & categorySynergy == 'Cut' 
+                                        & slugSeason == '2018-19', typeSeason == 'Reg')
+
+cut_off <- cut_off %>% group_by(groupPosition) %>% mutate(tiers = case_when(poss < quantile(poss, 0.33) ~ 'not enough possessions',
+                                                                            TRUE ~ 'enough possessions'),
+                                                          value = case_when(ppp <mean(ppp) ~ ppp/-1,
+                                                                            TRUE ~ ppp))
+
+hchart(cut_off %>% filter(groupPosition == 'G') %>% arrange(-value), type = 'column',
+       hcaes(x = namePlayer, y = round(value, 3), group = tiers)) %>% 
+ hc_xAxis(labels = list(rotation=-45)) %>% 
+ hc_colors(c("DarkGreen", "LightGray")) %>% 
+ hc_title(text = "Guard points per possession in Cut position") %>% 
+ hc_add_theme(hc_theme_elementary()) %>% 
+ hc_yAxis(title = list(text ='points per possesion')) %>%
+ hc_credits(enabled =T, text = "source : nba.com") %>% 
+ hc_subtitle(text = 'negative value for the players under the ppp average')
+```
